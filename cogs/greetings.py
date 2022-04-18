@@ -28,6 +28,11 @@ class Greetings(commands.Cog): # create a class for our cog that inherits from c
         channel = discord.utils.get(member.guild.channels, name='general')
         await channel.send(f"I'm so sorry {member.mention} had to leave.")
         await member.send("Don't leave!")
+    @commands.command()
+    async def invite(self,ctx):
+        await ctx.send("https://discord.com/api/oauth2/authorize?client_id=760289979590770738&permissions=8&scope=bot%20applications.commands")
+        async with ctx.typing():
+             await ctx.send("help spread the bot to more servers!")
  
 
 def setup(bot): # this is called by Pycord to setup the cog

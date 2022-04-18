@@ -1,5 +1,4 @@
 import discord
-from dotenv import load_dotenv
 from discord.ext import commands, tasks
 from discord.voice_client import VoiceClient
 import youtube_dl
@@ -7,11 +6,11 @@ import asyncio
 from discord.utils import get
 import os
 from random import choice
+from keep_alive import keep_alive
 youtube_dl.utils.bug_reports_message = lambda: ''
 from neuralintents import GenericAssistant
 import nltk
 nltk.download('omw-1.4')
-load_dotenv()
 ytdl_format_options = {
     'format': 'bestaudio/best',
     'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -63,7 +62,7 @@ def is_playing(ctx):
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix='?', intents=intents)
  
-status = ['Jamming out to music!', 'Eating!', 'Sleeping!', 'Call Of Duty:Mobile']
+status = ['Jamming out to music!', 'Eating!', 'Call Of Duty:Mobile', 'Sleeping!']
 queue = []
 loop = False
 
@@ -218,8 +217,8 @@ async def view(ctx):
 async def change_status():
     await client.change_presence(activity=discord.Game(choice(status)))
  
-@client.command(pass_context=True, aliases=['n', 'nex'])
-async def next(ctx):
+@client.command(aliases=['n', 'nex'])
+async def skip(ctx):
     global queue
     voice = get(client.voice_clients, guild=ctx.guild)
  
@@ -233,14 +232,46 @@ async def next(ctx):
     else:
         print("No music playing")
         await ctx.send("No music playing failed")
- 
+
+@client.command()
+async def skipto(ctx, number: int):
+  global queue
+  server = ctx.message.guild
+  voice_channel = server.voice_client
+  if voice_channel.is_connected and voice_channel.is_playing():
+    voice_channel.stop()
+  queue.pop(number-2)
+  
+  try:
+    async with ctx.typing():
+      player = await YTDLSource.from_url(queue[0], loop=client.loop)
+      voice_channel.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+                
+      if loop:
+              queue.append(queue[0])
+
+      del(queue[0])
+                
+      await ctx.send('**Now playing:** {}'.format(player.title))
+
+  except:
+    await ctx.send("playing failed")
+  
+
+@client.command(name="clearmessages", aliases=['cls', 'clearmsgs'])
+async def clear(ctx, number: int):
+    await ctx.channel.purge(limit=number) 
+
 cogs_list = [
     'greetings',
     'math',
-    'fun'
+    'fun',
+    'admin'
 ]
 
 for cog in cogs_list:
     client.load_extension(f'cogs.{cog}')
- 
-client.run(os.getenv("TOKEN"))
+
+
+keep_alive()
+client.run("NzYwMjg5OTc5NTkwNzcwNzM4.X3J5OA.LOxR2u-HhH5LHEWhZO1FUx8Uecc")

@@ -21,10 +21,7 @@ class fun(commands.Cog): # create a class for our cog that inherits from command
  
     @commands.command(name='creditz', help='This command returns the TRUE credits')
     async def creditz(self, ctx):
-        await ctx.send('**No one but me, lozer!**')
-    @commands.command(name="clearmessages")
-    async def cls(self, ctx, limit: int):
-        await ctx.channel.purge(limit=limit)    
+        await ctx.send('**No one but me, lozer!**')   
 
 def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(fun(bot)) # add the cog to the bot           

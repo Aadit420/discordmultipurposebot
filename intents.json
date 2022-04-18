@@ -1,9 +1,13 @@
 {"intents": [
     {"tag": "greeting",
-    "patterns": ["hi", "hello", "How are you", "hey", "Good day to you"],
-    "responses": ["Hello!", "Hi good sir", "Am fine, how are you?"]},
+
+      "patterns": [ "hi", "hello", "How are you", "hey", "Good day to you" ],
+
+      "responses": [ "Hello!", "Hi good sir", "Am fine, how are you?" ]},
     {"tag": "farewell",
-    "Patterns": ["goodbye", "Farewell", "See you soon", "good night"],
-    "responses": ["goodbye", "Farewell", "See you soon", "good night"]}
+
+      "patterns": [ "goodbye", "Farewell", "See you soon", "good night" ],
+
+      "responses": [ "goodbye", "Farewell", "See you soon", "good night" ]}  
 ]
 }
